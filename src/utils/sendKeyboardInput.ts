@@ -7,3 +7,9 @@ export default function sendKeyboardInput(keyDefinition: KeyDefinition) {
     window.vuplex.postMessage({ type: MessageType.INPUT_RECEIVED, value: keyDefinition.value });
   }
 }
+
+export function sendBoardInput(type: MessageType, tool?: string) {
+  if (window.vuplex) {
+    window.vuplex.postMessage({ type, tool });
+  }
+}

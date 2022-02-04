@@ -11,6 +11,7 @@ import SimpleKeyDefinition from '../../models/SimpleKeyDefinition';
 import sendKeyboardInput from '../../utils/sendKeyboardInput';
 import VoiceButton from './VoiceButton';
 import './styles.scss';
+import { BoardToolbar } from './BoardToolbar';
 
 export default class Keyboard extends Component {
 
@@ -19,7 +20,10 @@ export default class Keyboard extends Component {
     language: this._keySet.language,
     layout: this._keySet.layout,
     voiceRecognitionEnabled: false,
-    voiceRecognitionActive: false
+    voiceRecognitionActive: false,
+    insideBoard: false,
+    textInputFocused: false,
+    currentTool: "selectPan",
   };
   private _backspaceKeyDefinition = new SimpleKeyDefinition('Backspace', sendKeyboardInput);
   private _returnKeyDefinition = new SimpleKeyDefinition('Enter', sendKeyboardInput);
@@ -39,35 +43,45 @@ export default class Keyboard extends Component {
   }
 
   render() {
-    return (
-      <div className="keyboard">
-        <div className="num-pad-container">
-          <NumPad/>
-        </div>
-        <div className="board-margin"/>
-        <div className="center-board-container">
-          <CenterBoard rows={this._keySet.getRows()} spacebarText={this._keySet.language}/>
-        </div>
-        <div className="enter-key-area">
-          <Key className="backspace-icon" definition={this._backspaceKeyDefinition}>
-            <img src={backspaceIcon} alt="backspace"/>
-          </Key>
-          <div className="return-key-container">
-            <Key definition={this._returnKeyDefinition} className="return-key-component">
-              <div className="return-key">
-                <div className="return-key-text">
-                  <img src={returnIcon} alt="return"/>
-                </div>
-              </div>
-            </Key>
+    if (this.state.textInputFocused) {
+      return (
+        <div className="keyboard">
+          <div className="num-pad-container">
+            <NumPad/>
           </div>
-          {this._renderVoiceButton()}
+          <div className="board-margin"/>
+          <div className="center-board-container">
+            <CenterBoard rows={this._keySet.getRows()} spacebarText={this._keySet.language}/>
+          </div>
+          <div className="enter-key-area">
+            <Key className="backspace-icon" definition={this._backspaceKeyDefinition}>
+              <img src={backspaceIcon} alt="backspace"/>
+            </Key>
+            <div className="return-key-container">
+              <Key definition={this._returnKeyDefinition} className="return-key-component">
+                <div className="return-key">
+                  <div className="return-key-text">
+                    <img src={returnIcon} alt="return"/>
+                  </div>
+                </div>
+              </Key>
+            </div>
+            {this._renderVoiceButton()}
+          </div>
+          <div className="right-pad-container">
+            <RightPad/>
+          </div>
         </div>
-        <div className="right-pad-container">
-          <RightPad/>
-        </div>
-      </div>
-    );
+      );
+    }
+
+    if (this.state.insideBoard) {
+      return (
+        <BoardToolbar currentTool={this.state.currentTool} />
+      )
+    }
+
+    return null
   }
 
   private _handleReceivedMessage = (message) => {
@@ -90,6 +104,21 @@ export default class Keyboard extends Component {
         break;
       case MessageType.VOICE_RECOGNITION_STARTED:
         this.setState({ voiceRecognitionActive: true });
+        break;
+      case MessageType.EnterBoard:
+        this.setState({ insideBoard: true, currentTool: "selectPan" });
+        break;
+      case MessageType.ExitBoard:
+        this.setState({ insideBoard: false, currentTool: "selectPan" });
+        break;
+      case MessageType.EnterTextInput:
+        this.setState({ textInputFocused: true });
+        break;
+      case MessageType.ExitTextInput:
+        this.setState({ textInputFocused: false });
+        break;
+      case MessageType.ToolChange:
+        this.setState({ currentTool: data.tool });
         break;
     }
   }
