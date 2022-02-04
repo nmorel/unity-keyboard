@@ -22,3 +22,4 @@ yarn-error.log*
 
 # ignore CSS files, because the source files are SCSS.
 *.css
+/.history
