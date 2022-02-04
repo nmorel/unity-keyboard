@@ -20,7 +20,7 @@ export default class Keyboard extends Component {
     layout: this._keySet.layout,
     voiceRecognitionEnabled: false,
     voiceRecognitionActive: false,
-    insideBoard: true,
+    insideBoard: false,
     textInputFocused: false,
     currentTool: "selectPan",
     currentColor: "c1",
