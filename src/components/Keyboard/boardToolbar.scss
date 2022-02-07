@@ -10,6 +10,10 @@ ul {
   background-color: #222;
 }
 
+.main-menu {
+  justify-content: center;
+}
+
 .has-activity-color {
   color: #ffbe32;
   height: calc(#{$item-height} - 16px);
@@ -76,6 +80,7 @@ button.item:hover {
   background-clip: content-box;
   background: none;
   border: 0;
+  outline: 0;
 }
 .separator,
 .item {

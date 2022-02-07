@@ -70,10 +70,7 @@ export function BoardToolbar({
         />
         <button
           type="button"
-          className={[
-            "item color",
-            currentTool === "color" ? "is-active" : "",
-          ].join(" ")}
+          className="item color"
           style={{
             color: currentColor === "c16" ? "#000" : "rgb(213, 14, 23)",
           }}

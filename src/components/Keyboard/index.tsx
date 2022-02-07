@@ -137,7 +137,6 @@ export default class Keyboard extends Component {
         this.setState({ currentTool: data.data });
         break;
       case MessageType.ColorChange:
-        this.setState({ currentTool: "color" });
         this.setState({ currentColor: data.data });
         break;
     }
